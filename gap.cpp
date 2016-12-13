@@ -521,12 +521,12 @@ int ras_convert_shapeit_haps_to_ped(void)
         {
             myfile << matrix_shapeit_sample[j][0] << sep << matrix_shapeit_sample[j][1] << sep;
             myfile << matrix_shapeit_sample[j][3] << sep << matrix_shapeit_sample[j][4] << sep;
-            myfile << matrix_shapeit_sample[j][5] << sep << matrix_shapeit_sample[j][6] << sep;
-            for(i=0;i<n_SNP;i++) 
+            myfile << matrix_shapeit_sample[j][5] << sep << matrix_shapeit_sample[j][6];
+            for(i=0;i<n_SNP;i++)
             {
                 int al1=matrix[i][2*j];
                 int al2=matrix[i][2*j+1];
-                myfile << matrix_shapeit_allele[i][al1]  << sep << matrix_shapeit_allele[i][al2] << sep;
+                myfile << sep << matrix_shapeit_allele[i][al1]  << sep << matrix_shapeit_allele[i][al2];
             }
             myfile << endl;
             cout << "\r  " << (j*100/(p-1)) << "% completed." << flush;
