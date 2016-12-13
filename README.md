@@ -2,7 +2,7 @@
 Genetic Analysis Program.
 
 
-#### To convert 'SHAPE IT' output file ('.haps') to '.ped' file:
+#### To convert 'SHAPEIT' output file ('.haps') to '.ped' file:
     gap --haps2ped --file [file_name] --out [file_out] --code01
 
 
