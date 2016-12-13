@@ -8,12 +8,12 @@ Genetic Analysis Program.
 
 # Download
     git clone https://github.com/rtahmasbi/GAP
-    cd GAP
     
 
 # Compile
 To compile GAP, run the following command:
 
+    cd GAP
     make
 
 # Help
