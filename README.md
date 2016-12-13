@@ -11,12 +11,12 @@ Genetic Analysis Program.
     cd GAP
     
 
-
-
 # Compile
 To compile GAP, run the following command:
 
     make
+
+# Help
     ./gap --help
 
 
