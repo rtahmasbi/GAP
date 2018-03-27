@@ -36,7 +36,7 @@ int ras_comp_allele_freq(void);
 // haps to ped file
 int ras_read_shapeit_haps(string file_name);
 int ras_read_shapeit_sample(string file_name);
-int ras_convert_shapeit_haps_to_ped(void);
+bool ras_convert_shapeit_haps_to_ped(void);
 
 vector<string> split(string str,string sep);
 
@@ -321,7 +321,8 @@ void option_do(void)
         if (flag_InputFile){
             ras_read_shapeit_haps(Inputfile+".haps");
             ras_read_shapeit_sample(Inputfile+".sample");
-            ras_convert_shapeit_haps_to_ped();
+            if(!ras_convert_shapeit_haps_to_ped())
+                return;
         }
         else{
             throw("Error: No input file.");
@@ -510,7 +511,7 @@ int ras_read_shapeit_sample(string file_name)
 
 
 
-int ras_convert_shapeit_haps_to_ped(void)
+bool ras_convert_shapeit_haps_to_ped(void)
 {
     cout << "Writing ["+outfile+".ped] ..." << endl;
     ofstream myfile((outfile + ".ped").c_str());
@@ -541,6 +542,11 @@ int ras_convert_shapeit_haps_to_ped(void)
     }
     else // this is for different sample file format!!!!
     {
+        if (matrix_shapeit_sample[0].size() != 7)
+        {
+            cout << "Error in sample file format (add --code01 in your command)!" << endl;
+            return false;
+        }
         for(iind=0; iind<p; iind++)
         {
             myfile << matrix_shapeit_sample[iind][0] << sep << matrix_shapeit_sample[iind][1] << sep;
@@ -563,7 +569,7 @@ int ras_convert_shapeit_haps_to_ped(void)
     matrix_shapeit_sample.clear();
     matrix_shapeit_allele.clear();
     
-    return 0;
+    return true;
 }
 
 //////////////
@@ -581,6 +587,7 @@ void ras_show_help(void)
     //cout<<endl;
     cout<<"List of commands:"<<endl;
     cout<<"      '--help' or '-h'"<<endl;
+    cout<<"      '--debug'"<<endl;
     cout<<"      '--haps2ped'"<<endl;
     cout<<"      '--dataman'"<<endl;
     cout<<endl;
