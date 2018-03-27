@@ -54,6 +54,8 @@ vector< vector<string> > matrix_shapeit_allele;
 
 // help
 bool flag_Help=false;
+//
+bool DEBUG=false;
 
 // version
 string GLOB_VER=" 0.2 "; //length should be 5
@@ -278,6 +280,13 @@ void option_proc(int option_num, char* option_str[])
             cout << "  " << argv[i] << endl;
             flag_transpose=true;
         }
+        //=====================================================================
+        // --DEBUG
+        if(strcmp(argv[i],"--debug")==0){
+            DEBUG = true;
+            cout << "  " << argv[i] << endl;
+        }
+
     }
     cout << endl;
 }
@@ -434,17 +443,17 @@ int ras_read_shapeit_haps(string file_name)
     vector<string> st1;
 
     string line;
-    long int j=0,i=0;
+    long int isnp=0,i=0;
     while (getline(ifile, line)){ // for each SNP
         st1=split(line,sep);
         matrix_shapeit_allele[j][0]=st1[3]; // First allele
         matrix_shapeit_allele[j][1]=st1[4]; // Second allele
         for(i=5; i<st1.size(); i++) // 2*inds
         {
-            matrix[j][i-5]=atoi(st1[i].c_str());
+            matrix[isnp][i-5]=atoi(st1[i].c_str());
         }
-        j++;
-        cout << "\r  " << (j*100/n_SNP) << "% completed." << flush;
+        isnp++;
+        cout << "\r  " << (isnp*100/n_SNP) << "% completed." << flush;
     }    
     cout << endl;
     ifile.clear();
@@ -470,18 +479,18 @@ int ras_read_shapeit_sample(string file_name)
     vector<string> st1;
 
     string line;
-    long int j=0,i=0;
+    long int iind=0,icol=0;
     getline(ifile, line); //discard first line
     getline(ifile, line); //discard second line
         
     while (getline(ifile, line)){
         st1=split(line,sep);
-        for(i=0; i<st1.size(); i++)
+        for(icol=0; icol<st1.size(); icol++)
         {
-            matrix_shapeit_sample[j][i]=st1[i];
+            matrix_shapeit_sample[iind][icol]=st1[icol];
         }
-        j++;
-        cout << "\r  " << (j*100/(n_r-2)) << "% completed." << flush;
+        iind++;
+        cout << "\r  " << (iind*100/(n_r-2)) << "% completed." << flush;
     }    
     cout << endl;
     ifile.clear();
@@ -497,23 +506,28 @@ int ras_convert_shapeit_haps_to_ped(void)
     cout << "Writing ["+outfile+".ped] ..." << endl;
     ofstream myfile((outfile + ".ped").c_str());
     
-    long int i,j;
+    long int i,iind;
     long int p=(n_col-5)/2; // p=number of inds
     if (flag_code01){
-        for(j=0;j<p;j++)
+        for(iind=0;iind<p;iind++)
         {
             //myfile << matrix_shapeit_sample[j][0] << sep << matrix_shapeit_sample[j][1] << sep;
             //myfile << matrix_shapeit_sample[j][3] << sep << matrix_shapeit_sample[j][4] << sep;
             //myfile << matrix_shapeit_sample[j][5] << sep << matrix_shapeit_sample[j][6] << sep;
-            myfile << matrix_shapeit_sample[j][0] << sep << matrix_shapeit_sample[j][1] << sep; //FID, IID
+            myfile << matrix_shapeit_sample[iind][0] << sep << matrix_shapeit_sample[iind][1] << sep; //FID, IID
             myfile << "0" << sep << "0" << sep; // PID, MID
             myfile << "0" << sep << "-9"; // sex, phenotype
             for(i=0;i<n_SNP;i++)
             {
-                myfile << sep << matrix[i][2*j] << sep << matrix[i][2*j+1];
+                myfile << sep << matrix[i][2*iind] << sep << matrix[i][2*iind+1];
             }
             myfile << endl;
-            cout << "\r  " << (j*100/(p-1)) << "% completed." << flush;
+            if (DEBUG)
+            {
+                cout << "iid=" << iind << endl;
+            }
+            else
+                cout << "\r  " << (iind*100/(p-1)) << "% completed." << flush;
         }
     }
     else{
