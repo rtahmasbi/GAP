@@ -21,7 +21,7 @@ using namespace std;
 
 
 void ras_show_help(void);
-void option_proc(int option_num, char* option_str[]);
+bool option_proc(int option_num, char* option_str[]);
 void option_do(void);
 void ras_read_infile(string GCfile);
 long int ras_FileLineNumber(string file_name);
@@ -171,7 +171,10 @@ int main(int argc, char *argv[])
     cout << "Analysis started: " << ctime(&curr) << endl;
 
     try{
-        option_proc(argc, argv);
+        if (!option_proc(argc, argv))
+        {
+            return -1;
+        }
         option_do();
     }
     catch (string& s){
@@ -188,7 +191,7 @@ int main(int argc, char *argv[])
 }
 
 
-void option_proc(int option_num, char* option_str[])
+bool option_proc(int option_num, char* option_str[])
 {
     int i=0;
     int argc=option_num;
@@ -206,89 +209,95 @@ void option_proc(int option_num, char* option_str[])
             Inputfile=(string)argv[++i];
             cout<<"  --file "<<argv[i]<<endl;
         }
-        if(strcmp(argv[i],"--file2")==0){
+        else if(strcmp(argv[i],"--file2")==0){
             flag_InputFile2=true;
             Inputfile2=(string)argv[++i];
             cout<<"  --file2 "<<argv[i]<<endl;
         }
-        if(strcmp(argv[i],"--nskip")==0){
+        else if(strcmp(argv[i],"--nskip")==0){
             nskip=atoi(argv[++i]);
             cout<<"  --nskip "<<argv[i]<<endl;
         }
-        if(strcmp(argv[i],"--sep")==0){
+        else if(strcmp(argv[i],"--sep")==0){
             sep=(string) argv[++i];
             if(sep[0]=='\\' && sep[1]=='t') sep="\t";
             cout<<"  --sep "<<argv[i]<<endl;
         }
-        if(strcmp(argv[i],"--out")==0){
+        else if(strcmp(argv[i],"--out")==0){
             outfile=argv[++i];
             cout<<"  --out "<< argv[i] <<endl;
         }
-        if(strcmp(argv[i],"--pheno")==0){
+        else if(strcmp(argv[i],"--pheno")==0){
             flag_PhenoFile=true;
             PhenoFile=argv[++i];
             cout<<"  --pheno " << argv[i] <<endl;
         }
-        if(strcmp(argv[i],"--maf")==0){
+        else if(strcmp(argv[i],"--maf")==0){
             GLOB_MAF=atof(argv[++i]);
             cout << "  --maf " << argv[i] <<endl;
         }
-        if(strcmp(argv[i],"--thr")==0){
+        else if(strcmp(argv[i],"--thr")==0){
             GLOB_THR=atof(argv[++i]);
             cout << "  --thr " << argv[i] <<endl;
         }
         
         //=====================================================================
         // -haps2ped
-        if(strcmp(argv[i],"--haps2ped")==0){
+        else if(strcmp(argv[i],"--haps2ped")==0){
             flag_haps2ped=true;
             cout<<"  --haps2ped (Command)"<<endl;
         }   
-        if(strcmp(argv[i],"--code01")==0){
+        else if(strcmp(argv[i],"--code01")==0){
             flag_code01=true;
             cout<<"  --code01"<<endl;
         }   
         //=====================================================================
         // -help
-        if(strcmp(argv[i],"--help")==0 || strcmp(argv[i],"-h")==0 || strcmp(argv[i],"?")==0){
+        else if(strcmp(argv[i],"--help")==0 || strcmp(argv[i],"-h")==0 || strcmp(argv[i],"?")==0){
             flag_Help=true;
             cout<<"  " << argv[i] << " (Command)" <<endl;
         }
         //=====================================================================
         // -version
-        if(strcmp(argv[i],"--vesion")==0 || strcmp(argv[i],"-v")==0){
+        else if(strcmp(argv[i],"--vesion")==0 || strcmp(argv[i],"-v")==0){
             flag_version=true;
             cout<<"  " << argv[i] << " (Command)" <<endl;
         }
         //=====================================================================
         // --dataman
-        if(strcmp(argv[i],"--dataman")==0){
+        else if(strcmp(argv[i],"--dataman")==0){
             flag_DataMan=true;
             cout<<"  --dataman (Command)"<<endl;
         }
-        if(strcmp(argv[i],"--selcol")==0){
+        else if(strcmp(argv[i],"--selcol")==0){
             cout << "  " << argv[i];
             DataMan_OE_col=atoi(argv[++i]);
             cout << " " << argv[i] <<endl;
         }
-        if(strcmp(argv[i],"--selrow")==0){
+        else if(strcmp(argv[i],"--selrow")==0){
             cout << "  " << argv[i];
             DataMan_OE_row=atoi(argv[++i]);
             cout << " " << argv[i] <<endl;
         }
-        if(strcmp(argv[i],"--transpose")==0){
+        else if(strcmp(argv[i],"--transpose")==0){
             cout << "  " << argv[i] << endl;
             flag_transpose=true;
         }
         //=====================================================================
         // --DEBUG
-        if(strcmp(argv[i],"--debug")==0){
+        else if(strcmp(argv[i],"--debug")==0){
             DEBUG = true;
             cout << "  " << argv[i] << endl;
+        }
+        //=====================================================================
+        else{
+            cout << "Error: unknow parameter [" << argv[i] << "]";
+            return false;
         }
 
     }
     cout << endl;
+    return true;
 }
 
 
