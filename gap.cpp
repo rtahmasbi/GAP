@@ -446,8 +446,8 @@ int ras_read_shapeit_haps(string file_name)
     long int isnp=0,i=0;
     while (getline(ifile, line)){ // for each SNP
         st1=split(line,sep);
-        matrix_shapeit_allele[j][0]=st1[3]; // First allele
-        matrix_shapeit_allele[j][1]=st1[4]; // Second allele
+        matrix_shapeit_allele[isnp][0]=st1[3]; // First allele
+        matrix_shapeit_allele[isnp][1]=st1[4]; // Second allele
         for(i=5; i<st1.size(); i++) // 2*inds
         {
             matrix[isnp][i-5]=atoi(st1[i].c_str());
@@ -531,19 +531,19 @@ int ras_convert_shapeit_haps_to_ped(void)
         }
     }
     else{
-        for(j=0;j<p;j++)
+        for(iind=0; iind<p; iind++)
         {
-            myfile << matrix_shapeit_sample[j][0] << sep << matrix_shapeit_sample[j][1] << sep;
-            myfile << matrix_shapeit_sample[j][3] << sep << matrix_shapeit_sample[j][4] << sep;
-            myfile << matrix_shapeit_sample[j][5] << sep << matrix_shapeit_sample[j][6];
+            myfile << matrix_shapeit_sample[iind][0] << sep << matrix_shapeit_sample[iind][1] << sep;
+            myfile << matrix_shapeit_sample[iind][3] << sep << matrix_shapeit_sample[iind][4] << sep;
+            myfile << matrix_shapeit_sample[iind][5] << sep << matrix_shapeit_sample[iind][6];
             for(i=0;i<n_SNP;i++)
             {
-                int al1=matrix[i][2*j];
-                int al2=matrix[i][2*j+1];
+                int al1=matrix[i][2*iind];
+                int al2=matrix[i][2*iind+1];
                 myfile << sep << matrix_shapeit_allele[i][al1]  << sep << matrix_shapeit_allele[i][al2];
             }
             myfile << endl;
-            cout << "\r  " << (j*100/(p-1)) << "% completed." << flush;
+            cout << "\r  " << (iind*100/(p-1)) << "% completed." << flush;
         }
     }
     cout << endl;
