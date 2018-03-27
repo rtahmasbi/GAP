@@ -539,7 +539,8 @@ int ras_convert_shapeit_haps_to_ped(void)
                 cout << "\r  " << (iind*100/(p-1)) << "% completed." << flush;
         }
     }
-    else{
+    else // this is for different sample file format!!!!
+    {
         for(iind=0; iind<p; iind++)
         {
             myfile << matrix_shapeit_sample[iind][0] << sep << matrix_shapeit_sample[iind][1] << sep;
